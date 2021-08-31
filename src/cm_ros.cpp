@@ -1,5 +1,6 @@
 #include "cm_ros/cm_ros.h"
 #include <iostream>
+
 using namespace torch::indexing;
 
 namespace cm_ros{
@@ -22,25 +23,23 @@ void ContrastMaximizationRos::eventStructCallback(const dvs_msgs::EventStruct::P
     int timeSize = msg->eventTime.data.size();
     if (timeSize>10000){
         torch::Tensor eventTemp = torch::tensor(msg->eventArr.data,option_.dtype(torch::kUInt8));
-        torch::Tensor timeTemp = torch::tensor(msg->eventTime.data,option_.dtype(torch::kInt64));
-        timeTemp = timeTemp.to(eventPackets_.K.dtype()).div(1e6);
-        
+        torch::Tensor timeTemp = torch::tensor(msg->eventTime.data,option_.dtype(torch::kFloat32));
+        // std::cout << "1st: " << timeTemp.index({0})-timeTemp.index({0}) << " , " << "2nd: " << timeTemp.index({timeSize-1})-timeTemp.index({0})  << std::endl;
+
+
         eventTemp = eventTemp.view({3,timeSize});
-        timeTemp = timeTemp.view({1,timeSize});
+        // timeTemp = timeTemp.view({1,timeSize});
 
         eventPackets_.event = torch::vstack({eventTemp.index({Slice(0,2),Slice()}),torch::ones({1,timeSize},option_.dtype(torch::kUInt8))});
         eventPackets_.event = eventPackets_.event.to(eventPackets_.K.dtype());
         eventPackets_.event = torch::mm(eventPackets_.K.inverse(),eventPackets_.event);
-        eventPackets_.eventTime = timeTemp;
+        eventPackets_.eventTime = timeTemp.view({1,timeSize});;
         eventPackets_.polarityOn = eventTemp.index({2,Slice()});
         eventPackets_.polarityOff = eventTemp.index({2,Slice()}).logical_not().to(torch::kUInt8);
 
-        // std::cout << eventSize << std::endl;
         opt_.runOptimiser(eventPackets_);
 
         
-        // std::cout << eventPackets_.eventTime << std::endl;
-        // std::cout << eventPackets_.polarityOff << std::endl;
     }   
 
 
