@@ -66,4 +66,8 @@ inline torch::Tensor CM_Model::gaussEventImage( torch::Tensor &eventHnorm, torch
 
 }
 
+void CM_Model::printInfo()
+{
+    std::cout  << "Height: " << h_ << "   " << "Width: " << w_ << "   " << "Sigma: " << sigma << "   "<< "k: " << k_ << std::endl;
+}
 

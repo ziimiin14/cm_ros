@@ -6,6 +6,7 @@ CM_Opt::CM_Opt(CM_Model &model, torch::TensorOptions &options) : options_(option
     lastLoss= torch::zeros(1,options_);
     patience = 0;
     options_solve = torch::optim::AdagradOptions().lr(0.01).lr_decay(0.02);
+    model_.printInfo();
 }
 
 void CM_Opt::optimiser(eventPacket &eventPackets)

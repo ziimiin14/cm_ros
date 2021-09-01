@@ -12,6 +12,7 @@ struct CM_Model : torch::nn::Module
 
                 torch::Tensor forward(eventPacket &eventPackets);
                 torch::Tensor a;
+                void printInfo();
         private:
                 
                 torch::Tensor event_homogeneous;
