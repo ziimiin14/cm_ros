@@ -4,8 +4,8 @@ project(cm_ros)
 add_compile_options(-std=c++14)
 
 # Locate the cmake file of torchlib
-set(Torch_DIR "~/libtorch/share/cmake/Torch")
-
+# set(Torch_DIR "~/libtorch/share/cmake/Torch")
+set(Torch_DIR "~/.local/lib/python3.6/site-packages/torch/share/cmake/Torch") ## torch directory in xavier nx board
 #set(Torch_DIR "$ENV{TORCH_ROOT}/torch/share/cmake/Torch/")
 
 ## Find catkin macros and libraries
